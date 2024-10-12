@@ -6,7 +6,6 @@
 // hint.
 
 
-
 #[derive(Debug)]
 struct Order {
     name: String,
