@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -71,12 +70,62 @@ impl<T> LinkedList<T> {
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
-		//TODO
+		let mut merged_list=LinkedList::new();
+        let mut current_a=list_a.start;
+        let mut current_b=list_b.start;
+        
+        while current_a.is_some()||current_b.is_some() {
+            match (current_a,current_b) {
+                (Some(ptr_a),Some(ptr_b))=>{
+                    let val_a=unsafe {
+                        ptr_a.as_ref().val
+                    };
+                    let val_b=unsafe {
+                        ptr_b.as_ref().val
+                    };
+
+                    if val_a <= val_b{
+                        merged_list.add(val_a);
+                        current_a=unsafe {
+                            (*ptr_a.as_ptr()).next
+                        };
+                        
+                    }else {
+                        merged_list.add(val_b);
+                        current_b=unsafe {
+                            (*ptr_b.as_ptr()).next
+                        }
+                    }
+            }
+            (Some(ptr_a),None)=>{
+                let val_a=unsafe {
+                    ptr_a.as_ref().val
+                };
+                merged_list.add(val_a);
+                current_a=unsafe {
+                    (*ptr_a.as_ptr()).next
+                }
+            }
+            (Some(ptr_b),None)=>{
+                let val_b=unsafe {
+                    ptr_b.as_ref().val
+                };
+                merged_list.add(val_b);
+                current_b=unsafe {
+                    (*ptr_b.as_ptr()).next
+                }
+            }
+            (None,None)=>{
+                break ;
+            }
+                (None, Some(_)) => todo!(),
+        }
 		Self {
             length: 0,
             start: None,
             end: None,
-        }
+        };
+        
 	}
 }
 
@@ -170,4 +219,5 @@ mod tests {
 			assert_eq!(target_vec[i],*list_c.get(i as i32).unwrap());
 		}
 	}
+}
 }
